@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<routes xmlns="http://symfony.com/schema/routing"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://symfony.com/schema/routing http://symfony.com/schema/routing/routing-1.0.xsd">
+
+    <route id="interexcludecategory.config.view" path="/admin/module/InterExcludeCategory">
+        <default key="_controller">InterExcludeCategory:Configuration:view</default>
+    </route>
+
+    <route id="interexcludecategory.config.create" path="/admin/module/InterExcludeCategory/create" methods="post">
+        <default key="_controller">InterExcludeCategory:Configuration:create</default>
+    </route>
+
+</routes>

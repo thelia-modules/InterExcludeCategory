@@ -1,0 +1,69 @@
+{extends file="admin-layout.tpl"}
+
+{block name="no-return-functions"}{$admin_current_location = 'modules'}{/block}
+
+{block name="page-title"}{intl l='Inter exclude categories' d='interexcludecategory.bo.default'}{/block}
+
+{block name="check-resource"}admin.module{/block}
+{block name="check-access"}view{/block}
+{block name="check-module"}InterExcludeCategory{/block}
+
+{block name="main-content"}
+<div class="alert alert-info">
+    {intl l='Here you wan handle categories from which products must not be able to be added to cart together.'}
+    <br>
+    {intl l='Select 2 categories which are not parents and once submitted, once a product from one of these categories (or its children categories) is added to cart, trying to add to cart a product from the other category (or its children categories) will display a message letting the user choose if he wants to cancel adding the current product or to remove products from the other category (or children) in order to add the current product.'}
+</div>
+
+<div class="general-block-decorator">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="title title-without-tabs">
+                {intl l='Add a new products exclusion between catgories'}
+            </div>
+
+            {form name='interexcludecategory_create_form'}
+            <form action="{url path='/admin/module/InterExcludeCategory/create'}" method="post" class="row">
+                {form_hidden_fields form=$form}
+
+                <div class="col-md-5">
+                    {render_form_field form=$form field='first_category_id'}
+                </div>
+                <div class="col-md-5">
+                    {render_form_field form=$form field='second_category_id'}
+                </div>
+
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary">{intl l='Save'}</button>
+                </div>
+            </form>
+            {/form}
+
+            <br>
+
+            <div class="title title-without-tabs">
+                {intl l='Existing exclusions'}
+            </div>
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>{intl l='First category'}</th>
+                        <th>{intl l='Second category'}</th>
+                        <th>{intl l='Action'}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {foreach from=$interExcludeCategories item=interExcludeCategory}
+                        <tr>
+                            <td>{$interExcludeCategory->getFirstCategoryId()}</td>
+                            <td>{$interExcludeCategory->getSecondCategoryId()}</td>
+                            <td></td>
+                        </tr>
+                    {/foreach}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{/block}
