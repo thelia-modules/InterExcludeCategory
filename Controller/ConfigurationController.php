@@ -45,7 +45,7 @@ class ConfigurationController extends BaseAdminController
                         ->filterBySecondCategoryId($secondCategoryId)
                         ->findOne();
 
-                    if (null === $interExcludeCategory) {
+                    if (null === $interExcludeCategory && $firstCategoryId != $secondCategoryId) {
                         (new InterExcludeCategoryModel)
                             ->setFirstCategoryId($firstCategoryId)
                             ->setSecondCategoryId($secondCategoryId)
