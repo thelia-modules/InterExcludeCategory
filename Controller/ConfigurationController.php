@@ -61,4 +61,26 @@ class ConfigurationController extends BaseAdminController
 
         return $this->generateRedirectFromRoute('interexcludecategory.config.view');
     }
+
+    public function deleteAction()
+    {
+        $form =$this->createForm('interexcludecategory_delete_form');
+
+        try {
+            $this->validateForm($form);
+            $data = $form->getForm()->getData();
+
+            if (null !== $interExcludeCategory = InterExcludeCategoryQuery::create()
+                    ->findOneById($data['inter_exclude_category_id'])
+            ) {
+                $interExcludeCategory->delete();
+            }
+        } catch (FormValidationException $ex) {
+            $error_msg = $this->createStandardFormValidationErrorMessage($ex);
+        } catch (\Exception $ex) {
+            $error_msg = $ex->getMessage();
+        }
+
+        return $this->generateRedirectFromRoute('interexcludecategory.config.view');
+    }
 }

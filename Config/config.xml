@@ -12,6 +12,7 @@
 
     <forms>
         <form name="interexcludecategory_create_form" class="InterExcludeCategory\Form\InterExcludeCategoryCreateForm" />
+        <form name="interexcludecategory_delete_form" class="InterExcludeCategory\Form\InterExcludeCategoryDeleteForm" />
     </forms>
 
     <commands>

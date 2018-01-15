@@ -12,4 +12,8 @@
         <default key="_controller">InterExcludeCategory:Configuration:create</default>
     </route>
 
+    <route id="interexcludecategory.config.delete" path="/admin/module/InterExcludeCategory/delete" methods="post">
+        <default key="_controller">InterExcludeCategory:Configuration:delete</default>
+    </route>
+
 </routes>

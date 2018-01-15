@@ -58,7 +58,11 @@
                         <tr>
                             <td>{$interExcludeCategory->getFirstCategoryId()}</td>
                             <td>{$interExcludeCategory->getSecondCategoryId()}</td>
-                            <td></td>
+                            <td>
+                                <a class="btn btn-danger js_btn_delete" data-id="{$interExcludeCategory->getId()}">
+                                    <span class="glyphicon glyphicon-trash"></span>
+                                </a>
+                            </td>
                         </tr>
                     {/foreach}
                 </tbody>
@@ -66,4 +70,48 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="js_modal_confirm_delete" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h3>{intl l='Confirm deletion'}</h3>
+            </div>
+
+            {form name='interexcludecategory_delete_form'}
+            <form action="{url path='/admin/module/InterExcludeCategory/delete'}" method="post">
+                {form_hidden_fields form=$form}
+
+                {form_field form=$form field='inter_exclude_category_id'}
+                    <input type="hidden" name="{$name}" id="inter_exclude_category_id" value="">
+                {/form_field}
+
+                <div id="js_body_modal_confirm_delete" class="modal-body">
+                    {intl l='Do you really want to delete the exclusion between those categories?'}
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" aria-hidden="true">
+                        <span class="glyphicon glyphicon-remove"></span>{intl l='No'}
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        <span class="glyphicon glyphicon-check"></span>{intl l='Yes'}
+                    </button>
+                </div>
+
+            </form>
+            {/form}
+        </div>
+    </div>
+</div>
+{/block}
+
+{block name="after-javascript-include"}
+<script>
+    $('.js_btn_delete').click(function() {
+        $('#inter_exclude_category_id').val($(this).data('id'));
+        $('#js_modal_confirm_delete').modal('show');
+    });
+</script>
 {/block}
