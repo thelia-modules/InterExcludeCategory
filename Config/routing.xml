@@ -16,4 +16,9 @@
         <default key="_controller">InterExcludeCategory:Configuration:delete</default>
     </route>
 
+
+    <route id="interexcludecategory.excludefromcart.checkcart" path="/InterExcludeCategory/check-cart">
+        <default key="_controller">InterExcludeCategory:ExcludeFromCart:checkCart</default>
+    </route>
+
 </routes>

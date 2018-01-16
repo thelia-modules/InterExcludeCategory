@@ -6,6 +6,7 @@ use InterExcludeCategory\Model\InterExcludeCategoryQuery;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Thelia\Core\Event\Cart\CartEvent;
 use Thelia\Core\Event\TheliaEvents;
+use Thelia\Core\HttpFoundation\Response;
 use Thelia\Model\CartItem;
 use Thelia\Model\Category;
 use Thelia\Model\CategoryQuery;
@@ -40,7 +41,14 @@ class InterExcludeCategoryEventListener implements EventSubscriberInterface
 
             $addedProductCategories = $this->getAddedProductCategories($product);
 
-            $this->compareCategories($cartProductsCategories, $addedProductCategories);
+            $exclusionFound = $this->compareCategories($cartProductsCategories, $addedProductCategories);
+
+            if ($exclusionFound) {
+                // Exclusion found: prevent adding product to cart
+                $cartEvent->stopPropagation();
+
+                $cartEvent->
+            }
         }
     }
     
@@ -116,10 +124,11 @@ class InterExcludeCategoryEventListener implements EventSubscriberInterface
                 }
 
                 if (!empty($interExcludeCategory->getData())) {
-                    // Exclusion found: prevent adding product to cart
-                    $a = 'ici';
+                    return true;
                 }
             }
         }
+
+        return false;
     }
 }

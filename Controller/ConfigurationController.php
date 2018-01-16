@@ -24,8 +24,7 @@ class ConfigurationController extends BaseAdminController
             return $response;
         }
 
-        $interExcludeCategories = InterExcludeCategoryQuery::create()
-            ->find();
+        $interExcludeCategories = InterExcludeCategoryQuery::create()->find();
 
         return $this->render('module-config', ['interExcludeCategories' => $interExcludeCategories]);
     }
@@ -40,12 +39,16 @@ class ConfigurationController extends BaseAdminController
 
             foreach ($data['first_category_id'] as $firstCategoryId) {
                 foreach ($data['second_category_id'] as $secondCategoryId) {
+                    if ($firstCategoryId == $secondCategoryId) {
+                        continue;
+                    }
+
                     $interExcludeCategory = InterExcludeCategoryQuery::create()
                         ->filterByFirstCategoryId($firstCategoryId)
                         ->filterBySecondCategoryId($secondCategoryId)
                         ->findOne();
 
-                    if (null === $interExcludeCategory && $firstCategoryId != $secondCategoryId) {
+                    if (null === $interExcludeCategory) {
                         (new InterExcludeCategoryModel)
                             ->setFirstCategoryId($firstCategoryId)
                             ->setSecondCategoryId($secondCategoryId)
