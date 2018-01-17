@@ -25,35 +25,8 @@ You can add as many exclusions as you want, but it's not possible to exclude a c
 
 When trying to add a product to the cart if there is already a product from an excluding category, user will be prompted not to add this product or to remove products of the excluding category from his cart.
 
-## Hook
+## Integration
 
-If your module use one or more hook, fill this part. Explain which hooks are used.
+In the bottom script of your FO template layout, change the `var addCartMessageUrl = "{url path='ajax/addCartMessage'}";` declaration by `var addCartMessageUrl = "{url path='InterExcludeCategory/check-cart'}";` in order to have the popup displayed when trying to add a product in the cart while a product from a excluding category is already in.
 
-
-## Loop
-
-If your module declare one or more loop, describe them here like this :
-
-[loop name]
-
-### Input arguments
-
-|Argument |Description |
-|---      |--- |
-|**arg1** | describe arg1 with an exemple. |
-|**arg2** | describe arg2 with an exemple. |
-
-### Output arguments
-
-|Variable   |Description |
-|---        |--- |
-|$VAR1    | describe $VAR1 variable |
-|$VAR2    | describe $VAR2 variable |
-
-### Exemple
-
-Add a complete exemple of your loop
-
-## Other ?
-
-If you have other think to put, feel free to complete your readme as you want.
+Think about customizing the `includes/removeFromCart.html` file in your template.

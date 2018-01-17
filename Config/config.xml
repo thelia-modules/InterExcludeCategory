@@ -22,8 +22,11 @@
     </commands>
 
     <services>
-        <service id="interexcludecategory.services" class="InterExcludeCategory\EventListener\InterExcludeCategoryEventListener">
-            <argument id="request" type="service"/>
+        <service id="interexcludecategory.service" class="InterExcludeCategory\Service\InterExcludeCategoryService">
+        </service>
+
+        <service id="interexcludecategory.eventlistener" class="InterExcludeCategory\EventListener\InterExcludeCategoryEventListener">
+            <argument id="interexcludecategory.service" type="service"/>
             <tag name="kernel.event_subscriber"/>
         </service>
     </services>

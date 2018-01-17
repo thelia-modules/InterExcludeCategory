@@ -2,19 +2,24 @@
 
 namespace InterExcludeCategory\EventListener;
 
-use InterExcludeCategory\Model\InterExcludeCategoryQuery;
+use InterExcludeCategory\Service\InterExcludeCategoryService;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Thelia\Core\Event\Cart\CartEvent;
 use Thelia\Core\Event\TheliaEvents;
-use Thelia\Core\HttpFoundation\Response;
-use Thelia\Model\CartItem;
-use Thelia\Model\Category;
-use Thelia\Model\CategoryQuery;
-use Thelia\Model\Product;
-use Thelia\Model\ProductQuery;
 
 class InterExcludeCategoryEventListener implements EventSubscriberInterface
 {
+    /** @var InterExcludeCategoryService */
+    protected $iecService;
+
+    /**
+     * @param InterExcludeCategoryService $iecService
+     */
+    public function __construct(InterExcludeCategoryService $iecService)
+    {
+        $this->iecService = $iecService;
+    }
+
     public static function getSubscribedEvents()
     {
         return [
@@ -33,102 +38,13 @@ class InterExcludeCategoryEventListener implements EventSubscriberInterface
         $cartItems = $cartEvent->getCart()->getCartItems();
         $productId = $cartEvent->getProduct();
 
-        if (!empty($cartItems->getData()) &&
-            null !== $productId &&
-            null !== $product = ProductQuery::create()->findOneById($productId)
-        ) {
-            $cartProductsCategories = $this->getCartItemsCategories($cartItems);
+        if (!empty($cartItems->getData()) && null !== $productId) {
+            $excludingCategories = $this->iecService->checkProductCategory($cartItems, $productId);
 
-            $addedProductCategories = $this->getAddedProductCategories($product);
-
-            $exclusionFound = $this->compareCategories($cartProductsCategories, $addedProductCategories);
-
-            if ($exclusionFound) {
+            if (!empty($excludingCategories)) {
                 // Exclusion found: prevent adding product to cart
                 $cartEvent->stopPropagation();
-
-                $cartEvent->
             }
         }
-    }
-    
-    private function getCartItemsCategories($cartItems)
-    {
-        $cartProductsCategories = [];
-
-        /** @var CartItem $cartItem */
-        foreach ($cartItems as $cartItem) {
-            $cartItemCategories = $cartItem->getProduct()->getCategories();
-
-            $cartProductsCategories = array_merge(
-                $cartProductsCategories,
-                $this->getProductCategories($cartItemCategories)
-            );
-        }
-
-        return array_unique($cartProductsCategories);
-    }
-
-    /**
-     * @param Product $product
-     * @return array
-     */
-    private function getAddedProductCategories($product)
-    {
-        $productCategories = $product->getCategories();
-
-        return array_unique($this->getProductCategories($productCategories));
-    }
-
-    /**
-     * @param $productCategories
-     * @return array
-     */
-    private function getProductCategories($productCategories)
-    {
-        $productCategoriesArray = [];
-
-        /** @var Category $category */
-        foreach ($productCategories as $category) {
-            $productCategoriesArray[] = $category->getId();
-            $parentCategoryId = $category->getParent();
-
-            while (0 != $parentCategoryId) {
-                $productCategoriesArray[] = $parentCategoryId;
-
-                $parentCategoryId = CategoryQuery::create()
-                    ->filterById($parentCategoryId)
-                    ->select('parent')
-                    ->findOne();
-            }
-        }
-
-        return $productCategoriesArray;
-    }
-
-    private function compareCategories($cartProductsCategories, $addedProductCategories)
-    {
-        foreach ($cartProductsCategories as $cartProductCategoryId) {
-            foreach ($addedProductCategories as $addedProductCategoryId) {
-                $interExcludeCategory = InterExcludeCategoryQuery::create()
-                    ->filterByFirstCategoryId($cartProductCategoryId)
-                    ->filterBySecondCategoryId($addedProductCategoryId)
-                    ->find();
-
-                // Check both first/second and second/first combinations
-                if (empty($interExcludeCategory->getData())) {
-                    $interExcludeCategory = InterExcludeCategoryQuery::create()
-                        ->filterByFirstCategoryId($addedProductCategoryId)
-                        ->filterBySecondCategoryId($cartProductCategoryId)
-                        ->find();
-                }
-
-                if (!empty($interExcludeCategory->getData())) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
     }
 }

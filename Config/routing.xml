@@ -21,4 +21,8 @@
         <default key="_controller">InterExcludeCategory:ExcludeFromCart:checkCart</default>
     </route>
 
+    <route id="interexcludecategory.excludefromcart.removeexcludingproducts" path="/module/InterExcludeCategory/remove-excluding-products">
+        <default key="_controller">InterExcludeCategory:ExcludeFromCart:removeExcludingProducts</default>
+    </route>
+
 </routes>
